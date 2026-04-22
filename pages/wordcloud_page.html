@@ -22,15 +22,18 @@
       font-weight: bold;
       text-decoration: none;
     }
-
-    a.back-link:hover {
-      text-decoration: underline;
-    }
+    a.back-link:hover { text-decoration: underline; }
 
     h1 {
       margin: 0 0 18px 0;
       font-size: 28px;
       font-family: 'Syne', sans-serif;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      margin-top: 0;
+      margin-bottom: 10px;
     }
 
     .layout {
@@ -42,7 +45,8 @@
 
     .panel,
     .chart-wrap,
-    .takeaway-section {
+    .takeaway-section,
+    .ranking-section {
       background: #f8fff4;
       border: 1px solid #cfe7c2;
       border-radius: 12px;
@@ -56,8 +60,7 @@
       display: block;
     }
 
-    .instruction,
-    .summary {
+    .instruction, .summary {
       font-size: 15px;
       line-height: 1.6;
     }
@@ -76,40 +79,147 @@
 
     .takeaway-section {
       margin-top: 24px;
-      max-width: 1200px;
-    }
-
-    .takeaway-section h2 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 30px;
     }
 
     .takeaway-section p {
-      font-size: 20px;
+      font-size: 18px;
       line-height: 1.6;
       margin-bottom: 0;
+    }
+
+    /* Ranking section */
+    .ranking-section {
+      margin-top: 24px;
+    }
+
+    .ranking-section h2 {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .ranking-subtitle {
+      font-size: 14px;
+      color: #4a6344;
+      margin-bottom: 16px;
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      padding: 6px 18px;
+      border-radius: 8px;
+      border: 1px solid #cfe7c2;
+      background: #e5f5de;
+      color: #2f5a22;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .tab-btn.active {
+      background: #2f5a22;
+      color: white;
+      border-color: #2f5a22;
+    }
+
+    .tab-btn:hover:not(.active) { background: #cfe7c2; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+
+    @media (max-width: 700px) {
+      .tab-content.active { grid-template-columns: 1fr; }
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* Bar rows */
+    .bar-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .bar-label {
+      width: 72px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .bar-track {
+      flex: 1;
+      background: #e5f5de;
+      border-radius: 6px;
+      height: 26px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      box-sizing: border-box;
+      min-width: 40px;
+    }
+
+    .bar-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+      white-space: nowrap;
+    }
+
+    .insight-box {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #2f5a22;
+      background: #e5f5de;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 0;
+    }
+
+    .insight-box strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #4a6344;
+      line-height: 1.5;
+      margin-top: 12px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- ✅ Back button -->
   <a class="back-link" href="../index.html">← Back to Home</a>
-
   <h1>UFO Word Cloud: Descriptions of Sightings</h1>
 
   <div class="layout">
 
-    <!-- Sidebar -->
     <div class="panel">
       <div class="label">Data source</div>
       <div class="instruction">
         This visualization uses <code>scrubbed.csv</code> from the National UFO Reporting Center (NUFORC), containing approximately 70,000 UFO sighting reports with attributes such as datetime, location, and comments.
       </div>
 
-      <div class="label">How the data was prepared</div>
+      <div class="label" style="margin-top:12px;">How the data was prepared</div>
       <div class="summary">
         The word cloud is generated from the <code>comments</code> field. Data was filtered to U.S. sightings from <strong>2010 onward</strong> with durations longer than two minutes. Text was cleaned by removing noise such as URLs and combining all descriptions into a single corpus for analysis.
       </div>
@@ -118,24 +228,129 @@
 
       <div class="label">Interpretation</div>
       <div class="summary">
-        Larger words indicate more frequently used terms in UFO sighting descriptions. This helps reveal common patterns in how people describe unexplained aerial phenomena.
+        Larger words indicate more frequently used terms. The rankings below break out color and shape language to show how witnesses describe what they saw.
       </div>
     </div>
 
-    <!-- Visualization -->
     <div class="chart-wrap">
       <img class="chart-image" src="../visualizations/ufo_wordcloud.png" alt="UFO Word Cloud">
     </div>
 
   </div>
 
+  <!-- Rankings -->
+  <div class="ranking-section">
+    <h2>Word Frequency Rankings</h2>
+    <p class="ranking-subtitle">Counts of color and shape words across all UFO sighting descriptions</p>
+
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="showTab('color', this)">Color Words</button>
+      <button class="tab-btn" onclick="showTab('shape', this)">Shape Words</button>
+    </div>
+
+    <div id="tab-color" class="tab-content active">
+      <div>
+        <div id="color-bars"></div>
+        <p class="note">Counts from ~70,000 NUFORC sighting reports filtered to U.S. sightings from 2010 onward.</p>
+      </div>
+      <p class="insight-box">
+        <strong>Why color words matter</strong>
+        Orange and red dominate, likely reflecting the warm glow of distant lights at night, consistent with aircraft, flares, or atmospheric effects. White is also very common, appearing when witnesses describe high-altitude or bright point sources. Cool colors like blue and green are notably less frequent, suggesting they are rarer or less salient in descriptions. Color patterns can help researchers distinguish between categories of sightings and cross-reference with known aerial phenomena.
+      </p>
+    </div>
+
+    <div id="tab-shape" class="tab-content">
+      <div>
+        <div id="shape-bars"></div>
+        <p class="note">Counts from ~70,000 NUFORC sighting reports filtered to U.S. sightings from 2010 onward.</p>
+      </div>
+      <p class="insight-box">
+        <strong>Why shape words matter</strong>
+        "Light" overwhelmingly dominates shape descriptions, suggesting most sightings are of ambiguous point sources rather than structured craft. Triangle and fireball are the next most common, triangle likely reflects a culturally iconic UFO shape, while fireball may overlap with meteor or re-entry sightings. Rarer geometric terms like disk, oval, and cigar appear less frequently but are historically associated with classic UFO archetypes. Comparing shape and color distributions together can reveal whether certain shapes are associated with particular colors.
+      </p>
+    </div>
+  </div>
+
   <!-- Takeaway -->
   <div class="takeaway-section">
     <h2>Takeaway</h2>
     <p>
-      This visualization highlights the most common words used in UFO sighting descriptions, revealing consistent patterns in how people interpret and report unexplained events. Terms such as “light,” “object,” “orange,” and “flying” dominate the dataset, suggesting that sightings are often described in terms of brightness, motion, and color rather than clearly identifiable structures. The presence of geometric descriptors like “triangle,” “circle,” and “orb” indicates recurring visual themes across reports. Overall, this suggests that while individual sightings vary, people rely on a shared and limited vocabulary to describe ambiguous aerial phenomena, reflecting both common perception patterns and the inherent uncertainty of these experiences.
+      This visualization highlights the most common words used in UFO sighting descriptions, revealing consistent patterns in how people interpret and report unexplained events. Terms such as "light," "object," "orange," and "flying" dominate the dataset, suggesting that sightings are often described in terms of brightness, motion, and color rather than clearly identifiable structures. The color ranking shows that warm tones — orange (3,521), red (2,423), and white (1,446) — far outnumber cool tones, while the shape ranking confirms that vague descriptors like "light" (3,054) vastly outnumber specific geometric forms. Together, these patterns suggest people rely on a shared and limited vocabulary to describe ambiguous aerial phenomena.
     </p>
   </div>
+
+  <script>
+    const colorData = [
+      { word: "orange",  count: 3521, hex: "#f97316" },
+      { word: "red",     count: 2423, hex: "#ef4444" },
+      { word: "white",   count: 1446, hex: "#94a3b8" },
+      { word: "blue",    count:  571, hex: "#3b82f6" },
+      { word: "green",   count:  414, hex: "#22c55e" },
+      { word: "reddish", count:  239, hex: "#c0392b" },
+      { word: "black",   count:  237, hex: "#555555" },
+      { word: "yellow",  count:  378, hex: "#eab308" },
+      { word: "amber",   count:  205, hex: "#f59e0b" },
+      { word: "silver",  count:  147, hex: "#9ca3af" },
+    ].sort((a, b) => b.count - a.count);
+
+    const shapeData = [
+      { word: "light",    count: 3054, hex: "#7b2cff" },
+      { word: "triangle", count:  632, hex: "#7b2cff" },
+      { word: "fireball", count:  572, hex: "#7b2cff" },
+      { word: "orb",      count:  482, hex: "#7b2cff" },
+      { word: "sphere",   count:  325, hex: "#7b2cff" },
+      { word: "oval",     count:  220, hex: "#7b2cff" },
+      { word: "circle",   count:  179, hex: "#7b2cff" },
+      { word: "diamond",  count:  119, hex: "#7b2cff" },
+      { word: "cigar",    count:  108, hex: "#7b2cff" },
+      { word: "disk",     count:  100, hex: "#7b2cff" },
+    ];
+
+    function renderBars(containerId, data) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      const max = data[0].count;
+
+      data.forEach(d => {
+        const pct = Math.round((d.count / max) * 100);
+
+        const row = document.createElement("div");
+        row.className = "bar-row";
+
+        const label = document.createElement("div");
+        label.className = "bar-label";
+        label.textContent = d.word;
+
+        const track = document.createElement("div");
+        track.className = "bar-track";
+
+        const fill = document.createElement("div");
+        fill.className = "bar-fill";
+        fill.style.width = pct + "%";
+        fill.style.background = d.hex;
+
+        const count = document.createElement("span");
+        count.className = "bar-count";
+        count.textContent = d.count.toLocaleString();
+
+        fill.appendChild(count);
+        track.appendChild(fill);
+        row.appendChild(label);
+        row.appendChild(track);
+        container.appendChild(row);
+      });
+    }
+
+    function showTab(name, btn) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+      document.getElementById("tab-" + name).classList.add("active");
+      btn.classList.add("active");
+    }
+
+    renderBars("color-bars", colorData);
+    renderBars("shape-bars", shapeData);
+  </script>
 
 </body>
 </html>
